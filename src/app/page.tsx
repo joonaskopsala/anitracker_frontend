@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 
 interface Anime {
   title: string
-  episode: string
+  episodes: string
   airingStart: string
   coverImage: string
 }
@@ -19,11 +19,12 @@ const AiringAnimePage: React.FC = () => {
     fetch('http://localhost:5000/airing_anime')
       .then((response) => response.json())
       .then((data) => {
+        console.log(data)
         const formattedData = data.map((anime: any) => ({
           title: anime.title,
-          episode: anime.episode,
-          airingStart: anime.airing_start,
-          coverImage: anime.cover_image
+          episodes: anime.episodes,
+          airingStart: anime.aired.from,
+          coverImage: anime.images.jpg.large_image_url
         }))
         setAiringAnime(formattedData)
       })
@@ -39,7 +40,7 @@ const AiringAnimePage: React.FC = () => {
           <Grid item key={index} xs={12} sm={6} md={4}>
             <AnimeCard
               title={anime.title}
-              episode={anime.episode}
+              episodes={anime.episodes}
               airingStart={anime.airingStart}
               coverImage={anime.coverImage}
             />

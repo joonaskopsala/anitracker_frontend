@@ -1,11 +1,15 @@
 'use client'
 
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import darkTheme from '../theme'
 
-const Layout: React.FC = ({ children }) => {
+interface LayoutProps {
+  children: ReactNode
+}
+
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <html lang="en">
       <head>

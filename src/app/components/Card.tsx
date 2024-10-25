@@ -6,14 +6,14 @@ import Typography from '@mui/material/Typography'
 
 interface AnimeCardProps {
   title: string
-  episode: string
+  episodes: string
   airingStart: string
   coverImage: string
 }
 
 const AnimeCard: React.FC<AnimeCardProps> = ({
   title,
-  episode,
+  episodes,
   airingStart,
   coverImage
 }) => {
@@ -25,7 +25,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({
           {title}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Episode: {episode}
+          Episodes: {episodes}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Airing Start: {new Date(airingStart).toLocaleDateString()}
