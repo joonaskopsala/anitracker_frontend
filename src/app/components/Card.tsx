@@ -1,25 +1,38 @@
-import { Paper, Typography } from '@mui/material';
-import React from 'react';
+import React from 'react'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CardMedia from '@mui/material/CardMedia'
+import Typography from '@mui/material/Typography'
 
-const Card = ({ anime }) => {
-    const { title, coverImage, airingAt } = anime.media;
-    const episode = anime.episode;
+interface AnimeCardProps {
+  title: string
+  episode: string
+  airingStart: string
+  coverImage: string
+}
 
-    const getTimeRemaining = () => {
-        const now = new Date().getTime();
-        const timeLeft = new Date(airingAt * 1000).getTime() - now;
-        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-        return `${hours} hours ${minutes} minutes`;
-    };
+const AnimeCard: React.FC<AnimeCardProps> = ({
+  title,
+  episode,
+  airingStart,
+  coverImage
+}) => {
+  return (
+    <Card sx={{ maxWidth: 345 }}>
+      <CardMedia component="img" height="140" image={coverImage} alt={title} />
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          {title}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Episode: {episode}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Airing Start: {new Date(airingStart).toLocaleDateString()}
+        </Typography>
+      </CardContent>
+    </Card>
+  )
+}
 
-    return (
-        <Paper>
-            <img src={coverImage.large} alt={title.english || title.native} />
-            <Typography>{title.english || title.native}</Typography>
-            <Typography>Next Episode ({episode}) in: {getTimeRemaining()}</Typography>
-        </Paper>
-    );
-};
-
-export {Card}
+export default AnimeCard

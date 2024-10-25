@@ -1,66 +1,53 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
-import { Container, Grid, Card, CardContent, Typography, CardMedia, CircularProgress } from '@mui/material';
+import Grid from '@mui/material/Grid'
+import Container from '@mui/material/Container'
+import AnimeCard from './components/Card'
+import { useEffect, useState } from 'react'
 
-const Home = () => {
-    const [animes, setAnimes] = useState([]);
-    const [loading, setLoading] = useState(true);
+interface Anime {
+  title: string
+  episode: string
+  airingStart: string
+  coverImage: string
+}
 
-    useEffect(() => {
-        const fetchAnimes = async () => {
-          try{
-            const response = await fetch('http://localhost:5000/airing_anime');
-            const data = await response.json();
-            setAnimes(data.data.Page.airingSchedules);
-          }catch(err){
-            console.error(err);
-          } finally {
-            setLoading(false);
-          }
-        };
+const AiringAnimePage: React.FC = () => {
+  const [airingAnime, setAiringAnime] = useState<Anime[]>([])
 
-        fetchAnimes();
-    }, []);
+  useEffect(() => {
+    fetch('http://localhost:5000/airing_anime')
+      .then((response) => response.json())
+      .then((data) => {
+        const formattedData = data.map((anime: any) => ({
+          title: anime.title,
+          episode: anime.episode,
+          airingStart: anime.airing_start,
+          coverImage: anime.cover_image
+        }))
+        setAiringAnime(formattedData)
+      })
+      .catch((error) => {
+        console.error('Error fetching: ', error)
+      })
+  }, [])
 
-    return (
-        <Container>
-            {loading ? (
-                <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                    <CircularProgress />
-                </div>
-            ) : (
-                <Grid container spacing={3}>
-                    {animes.map((anime: any) => (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={anime.media.id}>
-                            <Card>
-                                <CardMedia
-                                    component="img"
-                                    height="140"
-                                    image={anime.media.coverImage.extraLarge}
-                                    alt={anime.media.title.english || anime.media.title.native}
-                                />
-                                <CardContent>
-                                    <Typography gutterBottom variant="h6" component="div">
-                                        {anime.media.title.english || anime.media.title.native}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Next episode in: {formatTimeUntilNextEpisode(anime.timeUntilAiring)}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    ))}
-                </Grid>
-            )}
-        </Container>
-    );
-};
+  return (
+    <Container>
+      <Grid container spacing={4}>
+        {airingAnime.map((anime, index) => (
+          <Grid item key={index} xs={12} sm={6} md={4}>
+            <AnimeCard
+              title={anime.title}
+              episode={anime.episode}
+              airingStart={anime.airingStart}
+              coverImage={anime.coverImage}
+            />
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
+  )
+}
 
-const formatTimeUntilNextEpisode = (secondsUntilNextEpisode: number) => {
-    const hours = Math.floor(secondsUntilNextEpisode / 3600);
-    const minutes = Math.floor((secondsUntilNextEpisode % 3600) / 60);
-    return `${hours} hours ${minutes} minutes`;
-};
-
-export default Home;
+export default AiringAnimePage

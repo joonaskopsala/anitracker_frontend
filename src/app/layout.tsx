@@ -1,36 +1,33 @@
-'use client';
+'use client'
 
-import { CssBaseline } from '@mui/material';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import React from 'react'
+import { ThemeProvider } from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
+import darkTheme from '../theme'
 
-// Define your custom theme
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#1100ff',
-    },
-    secondary: {
-      main: '#e9d30f',
-    },
-    background: {
-      default: '#222222'
-    },
-  },
-});
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const Layout: React.FC = ({ children }) => {
   return (
     <html lang="en">
+      <head>
+        <title>Airing Anime Tracker</title>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="/favicon.ico" />
+      </head>
       <body>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={darkTheme}>
           <CssBaseline />
-          {children}
+          <header>
+            <h1>Airing Anime Tracker</h1>
+          </header>
+          <main>{children}</main>
+          <footer>
+            <p>&copy; 2024 Anime Tracker</p>
+          </footer>
         </ThemeProvider>
       </body>
     </html>
-  );
+  )
 }
+
+export default Layout
