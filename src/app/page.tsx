@@ -1,53 +1,71 @@
 'use client'
-
-import Grid from '@mui/material/Grid'
-import Container from '@mui/material/Container'
 import AnimeCard from './components/Card'
 import { useEffect, useState } from 'react'
+import Stack from '@mui/material/Stack'
+import { Anime, ApiAnime } from './utils/entity'
+import TemporaryDrawer from './components/DrawerList'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import CircularProgress from '@mui/material/CircularProgress'
+import { formatAiringAnime } from './utils/utils'
 
-interface Anime {
-  title: string
-  episodes: string
-  airingStart: string
-  coverImage: string
-}
-
-const AiringAnimePage: React.FC = () => {
+const AiringAnimePage = () => {
   const [airingAnime, setAiringAnime] = useState<Anime[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('http://localhost:5000/airing_anime')
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
-        const formattedData = data.map((anime: any) => ({
-          title: anime.title,
-          episodes: anime.episodes,
-          airingStart: anime.aired.from,
-          coverImage: anime.images.jpg.large_image_url
-        }))
-        setAiringAnime(formattedData)
-      })
-      .catch((error) => {
-        console.error('Error fetching: ', error)
-      })
+    const fetchAiringAnime = async () => {
+      try {
+        const apiResponse = await fetch('http://localhost:5000/airing_anime')
+        const formattedAnime = await formatAiringAnime(apiResponse)
+        setAiringAnime(formattedAnime)
+      } catch (error) {
+        console.error('Error fetching anime:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchAiringAnime()
   }, [])
 
   return (
-    <Container>
-      <Grid container spacing={4}>
-        {airingAnime.map((anime, index) => (
-          <Grid item key={index} xs={12} sm={6} md={4}>
-            <AnimeCard
-              title={anime.title}
-              episodes={anime.episodes}
-              airingStart={anime.airingStart}
-              coverImage={anime.coverImage}
-            />
-          </Grid>
-        ))}
-      </Grid>
-    </Container>
+    <>
+      <TemporaryDrawer />
+      <Typography
+        variant="h4"
+        sx={{ textAlign: 'center', margin: '2rem 0', width: '100%' }}
+      >
+        {'Airing Anime'}
+      </Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'start',
+          height: '100vh',
+          width: '100%'
+        }}
+      >
+        {loading ? (
+          <CircularProgress />
+        ) : airingAnime.length === 0 ? (
+          <Typography>{'No anime found, could be an API error :('}</Typography>
+        ) : (
+          <Stack
+            justifyContent="center"
+            direction="row"
+            spacing={6}
+            useFlexGap
+            sx={{ flexWrap: 'wrap', maxWidth: '60%' }}
+          >
+            {airingAnime.map((anime, index) => (
+              <AnimeCard anime={anime} key={index} />
+            ))}
+          </Stack>
+        )}
+      </Box>
+    </>
   )
 }
 

@@ -1,36 +1,57 @@
 'use client'
-
-import React, { ReactNode } from 'react'
+import React, {
+  ReactNode,
+  useEffect,
+  useState,
+  createContext,
+  useContext
+} from 'react'
 import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
-import darkTheme from '../theme'
+import { darkTheme, lightTheme } from '../theme'
+
+const ThemeContext = createContext({
+  toggleTheme: () => {}
+})
+
+export const useTheme = () => useContext(ThemeContext)
 
 interface LayoutProps {
   children: ReactNode
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout = ({ children }: LayoutProps) => {
+  const [theme, setTheme] = useState(lightTheme)
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme')
+    setTheme(savedTheme === 'dark' ? darkTheme : lightTheme)
+  }, [])
+
+  const toggleTheme = () => {
+    const newTheme = theme.palette.mode === 'dark' ? lightTheme : darkTheme
+    setTheme(newTheme)
+    localStorage.setItem('theme', newTheme.palette.mode)
+  }
+
   return (
-    <html lang="en">
-      <head>
-        <title>Airing Anime Tracker</title>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" href="/favicon.ico" />
-      </head>
-      <body>
-        <ThemeProvider theme={darkTheme}>
-          <CssBaseline />
-          <header>
-            <h1>Airing Anime Tracker</h1>
-          </header>
-          <main>{children}</main>
-          <footer>
-            <p>&copy; 2024 Anime Tracker</p>
-          </footer>
-        </ThemeProvider>
-      </body>
-    </html>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <ThemeContext.Provider value={{ toggleTheme }}>
+        <html lang="en">
+          <head>
+            <title>Anime Tracker</title>
+            <meta charSet="UTF-8" />
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1.0"
+            />
+            <link rel="icon" href="/favicon.ico" />
+          </head>
+          <body>{children}</body>
+        </html>
+      </ThemeContext.Provider>
+    </ThemeProvider>
   )
 }
 
