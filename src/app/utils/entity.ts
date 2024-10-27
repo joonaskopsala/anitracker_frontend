@@ -121,6 +121,7 @@ interface Anime {
   } | null
   finished: boolean
   popularity: number
+  synopsis: string
 }
 
 export type { ApiAnime, Anime }

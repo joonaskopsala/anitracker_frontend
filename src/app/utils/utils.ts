@@ -17,7 +17,8 @@ const formatAiringAnime = async (response: Response): Promise<Anime[]> => {
       link: anime.url,
       timeUntilNextEp: getTimeUntilNextBroadcast(anime.broadcast || null),
       finished: anime.airing,
-      popularity: anime.popularity
+      popularity: anime.popularity,
+      synopsis: anime.synopsis
     }))
     return formattedData.sort((a, b) => a.popularity - b.popularity)
   } catch (err) {

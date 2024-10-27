@@ -11,11 +11,11 @@ import IconButton from '@mui/material/IconButton'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import Switch from '@mui/material/Switch'
 import { useTheme } from '../layout'
-import { useEffect } from 'react'
+import TodayIcon from '@mui/icons-material/Today'
+import { Typography } from '@mui/material'
 
 export default function TemporaryDrawer() {
   const [open, setOpen] = React.useState(false)
-
   const { toggleTheme } = useTheme()
 
   const toggleDrawer = (newOpen: boolean) => () => {
@@ -23,7 +23,6 @@ export default function TemporaryDrawer() {
   }
 
   let theme = ''
-
   try {
     theme = localStorage.getItem('theme') || ''
   } catch (err) {
@@ -31,22 +30,36 @@ export default function TemporaryDrawer() {
   }
 
   const DrawerList = (
-    <Box sx={{ width: '10rem' }}>
+    <Box sx={{ width: '15rem' }}>
       <List>
         <ListItem disablePadding>
-          <ListItemButton disableRipple>
+          <ListItemButton disableRipple sx={{ justifyContent: 'center' }}>
             <ListItemIcon>
               <DarkModeIcon />
             </ListItemIcon>
             <Switch
               disableRipple
               onChange={toggleTheme}
-              checked={theme === 'dark' ? true : false}
+              checked={theme === 'dark'}
             />
           </ListItemButton>
         </ListItem>
       </List>
       <Divider />
+      <List>
+        <ListItem>
+          <ListItemButton
+            disableRipple
+            sx={{ justifyContent: 'center' }}
+            href="/"
+          >
+            <ListItemIcon>
+              <TodayIcon fontSize="large" />
+            </ListItemIcon>
+            <Typography fontSize="1.3rem">{'Airing anime'}</Typography>
+          </ListItemButton>
+        </ListItem>
+      </List>
     </Box>
   )
 

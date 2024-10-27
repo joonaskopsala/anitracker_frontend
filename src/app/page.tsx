@@ -8,6 +8,7 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
 import { formatAiringAnime } from './utils/utils'
+import { SpinningIcon } from './components/LoadingIcon'
 
 const AiringAnimePage = () => {
   const [airingAnime, setAiringAnime] = useState<Anime[]>([])
@@ -48,7 +49,7 @@ const AiringAnimePage = () => {
         }}
       >
         {loading ? (
-          <CircularProgress />
+          <SpinningIcon />
         ) : airingAnime.length === 0 ? (
           <Typography>{'No anime found, could be an API error :('}</Typography>
         ) : (
