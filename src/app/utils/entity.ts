@@ -122,6 +122,26 @@ interface Anime {
   finished: boolean
   popularity: number
   synopsis: string
+  status: string
 }
 
-export type { ApiAnime, Anime }
+interface Season {
+  year: string
+  seasons: Array<'spring' | 'summer' | 'fall' | 'winter'>
+}
+
+interface User {
+  username: string
+  email?: string
+  profilePicture?: string
+}
+
+interface AuthContextType {
+  user: User | null
+  login: (username: string, password: string) => Promise<void>
+  logout: () => void
+  getUser: () => User | null
+  isAuthenticated: boolean
+}
+
+export type { ApiAnime, Anime, Season, User, AuthContextType }

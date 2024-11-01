@@ -13,10 +13,11 @@ const formatAiringAnime = async (response: Response): Promise<Anime[]> => {
       title: anime.title,
       episodes: anime.episodes,
       airingStart: anime.aired.from,
-      coverImage: anime.images.jpg.large_image_url,
+      coverImage: anime.images.webp.large_image_url,
       link: anime.url,
       timeUntilNextEp: getTimeUntilNextBroadcast(anime.broadcast || null),
       finished: anime.airing,
+      status: anime.status,
       popularity: anime.popularity,
       synopsis: anime.synopsis
     }))

@@ -1,14 +1,13 @@
 'use client'
-import AnimeCard from './components/Card'
 import { useEffect, useState } from 'react'
+import AnimeCard from './components/Card'
 import Stack from '@mui/material/Stack'
-import { Anime, ApiAnime } from './utils/entity'
 import TemporaryDrawer from './components/DrawerList'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import CircularProgress from '@mui/material/CircularProgress'
 import { formatAiringAnime } from './utils/utils'
 import { SpinningIcon } from './components/LoadingIcon'
+import { Anime } from './utils/entity'
 
 const AiringAnimePage = () => {
   const [airingAnime, setAiringAnime] = useState<Anime[]>([])
@@ -18,15 +17,15 @@ const AiringAnimePage = () => {
     const fetchAiringAnime = async () => {
       try {
         const apiResponse = await fetch('http://localhost:5000/airing_anime')
-        const formattedAnime = await formatAiringAnime(apiResponse)
-        setAiringAnime(formattedAnime)
+        const formattedData = await formatAiringAnime(apiResponse)
+        setAiringAnime(formattedData)
       } catch (error) {
         console.error('Error fetching anime:', error)
+        setAiringAnime([])
       } finally {
         setLoading(false)
       }
     }
-
     fetchAiringAnime()
   }, [])
 

@@ -10,38 +10,62 @@ import MenuIcon from '@mui/icons-material/Menu'
 import IconButton from '@mui/material/IconButton'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import Switch from '@mui/material/Switch'
-import { useTheme } from '../layout'
 import TodayIcon from '@mui/icons-material/Today'
 import { Typography } from '@mui/material'
+import ViewTimelineIcon from '@mui/icons-material/ViewTimeline'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import LoginDialog from './LoginDialog'
+import { useAuth } from '../hooks/useAuth'
+import { AuthContextType } from '../utils/entity'
 
 export default function TemporaryDrawer() {
   const [open, setOpen] = React.useState(false)
-  const { toggleTheme } = useTheme()
+  const [loginDialogOpen, setLoginDialogOpen] = React.useState(false)
+  const { user, logout } = useAuth() as AuthContextType
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen)
   }
 
-  let theme = ''
-  try {
-    theme = localStorage.getItem('theme') || ''
-  } catch (err) {
-    theme = ''
+  const handleOpenLoginDialog = () => {
+    setLoginDialogOpen(true)
+  }
+
+  const handleCloseLoginDialog = () => {
+    setLoginDialogOpen(false)
+  }
+
+  const handleAccountClick = () => {
+    if (user) {
+      window.location.href = '/profile'
+    } else {
+      handleOpenLoginDialog()
+    }
   }
 
   const DrawerList = (
     <Box sx={{ width: '15rem' }}>
       <List>
-        <ListItem disablePadding>
-          <ListItemButton disableRipple sx={{ justifyContent: 'center' }}>
+        <ListItem>
+          <ListItemButton disableRipple sx={{ justifyContent: 'left' }}>
             <ListItemIcon>
               <DarkModeIcon />
             </ListItemIcon>
-            <Switch
-              disableRipple
-              onChange={toggleTheme}
-              checked={theme === 'dark'}
-            />
+            <Switch disableRipple onChange={() => {}} checked={false} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem>
+          <ListItemButton
+            disableRipple
+            sx={{ justifyContent: 'left' }}
+            onClick={handleAccountClick}
+          >
+            <ListItemIcon>
+              <AccountCircleIcon />
+            </ListItemIcon>
+            <Typography fontSize="1.3rem">
+              {user ? user.username : 'Account'}
+            </Typography>
           </ListItemButton>
         </ListItem>
       </List>
@@ -50,13 +74,25 @@ export default function TemporaryDrawer() {
         <ListItem>
           <ListItemButton
             disableRipple
-            sx={{ justifyContent: 'center' }}
+            sx={{ justifyContent: 'left' }}
             href="/"
           >
             <ListItemIcon>
               <TodayIcon fontSize="large" />
             </ListItemIcon>
             <Typography fontSize="1.3rem">{'Airing anime'}</Typography>
+          </ListItemButton>
+        </ListItem>
+        <ListItem>
+          <ListItemButton
+            disableRipple
+            sx={{ justifyContent: 'left' }}
+            href="/seasons"
+          >
+            <ListItemIcon>
+              <ViewTimelineIcon fontSize="large" />
+            </ListItemIcon>
+            <Typography fontSize="1.3rem">{'Seasons'}</Typography>
           </ListItemButton>
         </ListItem>
       </List>
@@ -79,6 +115,8 @@ export default function TemporaryDrawer() {
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {DrawerList}
       </Drawer>
+
+      <LoginDialog open={loginDialogOpen} onClose={handleCloseLoginDialog} />
     </>
   )
 }

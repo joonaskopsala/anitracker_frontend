@@ -12,5 +12,5 @@ Open [http://localhost:3000](http://localhost:3000) with your browser.
 
 ## About
 
-This project could be without backend, but I wanted to test python stuff so there it is.
-It uses [Jikan api](https://jikan.moe/) to get data.
+App to fetch airing animes and see when next episode airs.
+Backend uses [Jikan api](https://jikan.moe/) to get data.
