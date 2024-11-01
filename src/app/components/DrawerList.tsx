@@ -17,11 +17,13 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import LoginDialog from './LoginDialog'
 import { useAuth } from '../hooks/useAuth'
 import { AuthContextType } from '../utils/entity'
+import { useTheme } from '../layout'
 
 export default function TemporaryDrawer() {
   const [open, setOpen] = React.useState(false)
   const [loginDialogOpen, setLoginDialogOpen] = React.useState(false)
   const { user, logout } = useAuth() as AuthContextType
+  const { toggleTheme } = useTheme()
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen)
@@ -43,6 +45,13 @@ export default function TemporaryDrawer() {
     }
   }
 
+  let theme = ''
+  try {
+    theme = localStorage.getItem('theme') || ''
+  } catch (err) {
+    theme = ''
+  }
+
   const DrawerList = (
     <Box sx={{ width: '15rem' }}>
       <List>
@@ -51,7 +60,11 @@ export default function TemporaryDrawer() {
             <ListItemIcon>
               <DarkModeIcon />
             </ListItemIcon>
-            <Switch disableRipple onChange={() => {}} checked={false} />
+            <Switch
+              disableRipple
+              onChange={toggleTheme}
+              checked={theme === 'dark'}
+            />
           </ListItemButton>
         </ListItem>
         <ListItem>
